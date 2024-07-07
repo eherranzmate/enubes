@@ -42,7 +42,7 @@ class Database extends Config
         'strictOn'     => false,
         'failover'     => [],
         'port'         => 3306,
-        'socket'       => '/Applications/XAMPP/xamppfiles/var/mysql/mysql.sock',
+        // 'socket'       => '/Applications/XAMPP/xamppfiles/var/mysql/mysql.sock',
         'numberNative' => false,
         'dateFormat'   => [
             'date'     => 'Y-m-d',

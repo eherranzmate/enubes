@@ -20,24 +20,13 @@ class AuthController extends Controller
         $username = $this->request->getVar('username');
         $password = $this->request->getVar('password');
 
-        // Verificar conexión a la base de datos antes de continuar
-        try {
-            $db = \Config\Database::connect();
-            echo "Connected successfully<br>";
-        } catch (\Throwable $e) {
-            die('Error: ' . $e->getMessage());
-        }
 
-        // Agregar mensajes de depuración
-        echo "Username: " . $username . "<br>";
-        echo "Password: " . $password . "<br>";
-
-        $data = $model->getUser($username);
+        $data = $model->where('username', $username)->first();
 
         if ($data) {
-            $pass = $data['password'];
-            $verify_pass = password_verify($password, $pass);
-            if ($verify_pass) {
+            $hashed_password = $data['password'];
+            
+            if (password_verify($password, $hashed_password)) {
                 $ses_data = [
                     'id' => $data['id'],
                     'username' => $data['username'],
@@ -45,16 +34,26 @@ class AuthController extends Controller
                     'logged_in' => TRUE
                 ];
                 $session->set($ses_data);
-                return redirect()->to('/dashboard');
+                return redirect()->to('/landing');
             } else {
-                $session->setFlashdata('msg', 'Password is incorrect.');
+                $session->setFlashdata('msg', 'Contraseña incorrecta.');
                 return redirect()->to('/login');
             }
         } else {
-            $session->setFlashdata('msg', 'Username does not exist.');
+            $session->setFlashdata('msg', 'Usuario no encontrado.');
             return redirect()->to('/login');
         }
     }
+
+    public function landing()
+    {
+        $session = session();
+        if (!$session->get('logged_in')) {
+            return redirect()->to('/login');
+    }
+        echo view('landing');
+    }
+
 
     public function logout()
     {

@@ -73,7 +73,7 @@ class Filters extends BaseFilters
             // 'honeypot',
             // 'csrf',
             // 'invalidchars',
-            'auth' => ['except' => ['login', 'loginAuth', 'logout']],
+            'auth' => ['except' => ['login', 'loginAuth', 'logout', 'landing']],
         ],
         'after' => [
             // 'honeypot',
